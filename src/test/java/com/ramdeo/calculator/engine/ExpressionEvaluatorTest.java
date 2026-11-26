@@ -156,4 +156,9 @@ class ExpressionEvaluatorTest {
     void strayClosingBracketFails() {
         assertFails(")");
     }
+
+    @Test
+    void overflowingResultFails() {
+        assertFails("10^200*10^200");
+    }
 }
