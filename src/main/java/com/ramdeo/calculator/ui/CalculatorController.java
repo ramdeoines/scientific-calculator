@@ -5,6 +5,8 @@ import com.ramdeo.calculator.engine.ExpressionEvaluator;
 import com.ramdeo.calculator.exception.CalculatorException;
 import java.math.BigDecimal;
 import java.math.MathContext;
+import javafx.scene.Scene;
+import javafx.scene.input.KeyEvent;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -22,25 +24,65 @@ public class CalculatorController {
     private Entry lastResult;
     private boolean justEvaluated = false;
     private boolean showingError = false;
+    private Button angleModeButton;
 
     public CalculatorController(CalculatorView view) {
         this.view = view;
         for (Button button : view.getButtons()) {
-            button.setOnAction(event -> handle(button));
+            if (button.getText().equals("DEG")) {
+                angleModeButton = button;
+            }
+            button.setOnAction(event -> handle(button.getText()));
         }
+    }
+
+    public void attachKeyboard(Scene scene) {
+        // Special keys: Enter, Backspace, Escape, Delete
+        scene.addEventHandler(KeyEvent.KEY_PRESSED, event -> {
+            String label = switch (event.getCode()) {
+                case ENTER -> "=";
+                case BACK_SPACE -> "⌫";
+                case ESCAPE, DELETE -> "C";
+                default -> null;
+            };
+            if (label != null) {
+                handle(label);
+                event.consume();
+            }
+        });
+
+        // Typed characters: digits, operators, brackets
+        scene.addEventHandler(KeyEvent.KEY_TYPED, event -> {
+            String label = labelForTypedCharacter(event.getCharacter());
+            if (label != null) {
+                handle(label);
+                event.consume();
+            }
+        });
+    }
+
+    private static String labelForTypedCharacter(String character) {
+        return switch (character) {
+            case "0", "1", "2", "3", "4", "5", "6", "7", "8", "9",
+                 ".", "(", ")", "+", "^", "=", "e" -> character;
+            case "-" -> "−";
+            case "*" -> "×";
+            case "/" -> "÷";
+            case "p" -> "π";
+            default -> null;
+        };
     }
 
     // --- Reacting to a button press ---
 
-    private void handle(Button button) {
-        String label = button.getText();
+    private void handle(String label) {
         resetErrorIfShowing();
 
         switch (label) {
             case "C" -> clearAll();
             case "⌫" -> backspace();
             case "=" -> evaluate();
-            case "DEG", "RAD" -> toggleAngleMode(button);
+            case "DEG", "RAD" -> toggleAngleMode();
             default -> insert(label);
         }
         view.getExpressionField().setText(displayText());
@@ -87,9 +129,9 @@ public class CalculatorController {
         }
     }
 
-    private void toggleAngleMode(Button button) {
+    private void toggleAngleMode() {
         angleMode = (angleMode == AngleMode.DEGREES) ? AngleMode.RADIANS : AngleMode.DEGREES;
-        button.setText(angleMode == AngleMode.DEGREES ? "DEG" : "RAD");
+        angleModeButton.setText(angleMode == AngleMode.DEGREES ? "DEG" : "RAD");
     }
 
     // --- Errors ---
@@ -148,4 +190,4 @@ public class CalculatorController {
                 .stripTrailingZeros()
                 .toString();
     }
-}
+}   

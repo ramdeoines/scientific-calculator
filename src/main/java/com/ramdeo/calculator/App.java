@@ -11,8 +11,9 @@ public class App extends Application {
     @Override
     public void start(Stage stage) {
         CalculatorView view = new CalculatorView();
-        new CalculatorController(view);
+        CalculatorController controller = new CalculatorController(view);
         Scene scene = new Scene(view.getRoot(), 400, 620);
+        controller.attachKeyboard(scene);
         scene.getStylesheets().add(
                 getClass().getResource("/styles.css").toExternalForm());
 
