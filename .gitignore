@@ -1,0 +1,13 @@
+# Maven build output
+target/
+
+# Java compiled files and logs
+*.class
+*.log
+
+# IDE files generated automatically
+.classpath
+.project
+.settings/
+.vscode/
+.idea/
