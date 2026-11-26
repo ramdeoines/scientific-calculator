@@ -1,0 +1,37 @@
+.root-pane {
+    -fx-background-color: #1e1f26;
+    -fx-padding: 16;
+}
+
+/* --- Display --- */
+.expression {
+    -fx-background-color: transparent;
+    -fx-text-fill: #9aa0b4;
+    -fx-font-size: 18px;
+    -fx-alignment: center-right;
+    -fx-focus-color: transparent;
+    -fx-faint-focus-color: transparent;
+}
+
+.result {
+    -fx-text-fill: white;
+    -fx-font-size: 40px;
+    -fx-font-weight: bold;
+}
+
+/* --- Buttons --- */
+.calc-button {
+    -fx-font-size: 16px;
+    -fx-text-fill: white;
+    -fx-background-radius: 10;
+    -fx-cursor: hand;
+}
+
+.calc-button:hover   { -fx-opacity: 0.85; }
+.calc-button:pressed { -fx-opacity: 0.7; }
+
+.digit    { -fx-background-color: #2f3140; }
+.function { -fx-background-color: #3b3f58; -fx-font-size: 14px; }
+.operator { -fx-background-color: #ff9f43; }
+.equals   { -fx-background-color: #2ecc71; }
+.clear    { -fx-background-color: #e05561; }
